@@ -7,9 +7,10 @@ import Domain.Commodity;
 
 
 
-public class CashControl extends DBControl
+public class CashControl extends CommodityDBControl
 {
-	private Bill b;	//账单
+	private Bill b=null;	//账单
+	
 	//DBControl control;	
 	//数据库控制类
 	public CashControl() throws Exception
@@ -20,34 +21,122 @@ public class CashControl extends DBControl
 	}
 	
 	public boolean newBill(){
-		b=new Bill();
+		try {
+			b=new Bill();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return b==null?false:true;
 	};
 	
 	public void cancelBill(){
+		
 		//cancel the bill 
-		for(Commodity c:nowBill.shoppingList)
+		for(int i=0;i<b.shoppingList.size();i++)
 		{
 			//a function can cancel by commodity
-			cancelCommodity(c);
+			try {
+				cancelCommodity(i);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		delBill();
+		if(b!=null)b.clear();
+		b=null;
+		
 	};
 	
-	public void delBill(){
+	public void finishBill(){
+		
+		
 		b.clear();
-		del b;
-		b=null;
+		//b=null;
+	}
+	
+	private void addCommodityToPresentBill(Commodity c,Vector<Commodity> shoppoingList,
+			Vector<Integer> priNumList){
+		
+		int index=0;
+		boolean isAdd=false;
+		int num=1;
+		for(Commodity existC: shoppoingList)
+		{
+			if(existC.getBarcode().equals(c.getBarcode())){
+				isAdd=true;
+				num=priNumList.get(index);
+				priNumList.remove(index);
+				priNumList.insertElementAt(new Integer(++num), index);
+				break;
+			}
+			else index++;
+		}
+		
+		if(!isAdd){
+			//not exist
+			shoppoingList.addElement(c);
+			priNumList.addElement(new Integer(num));
+			
+		}
+		
+		
+	}
+	
+	public boolean formPresentBill(Vector<Commodity> shoppoingList,
+								Vector<Integer> priNumList,
+								Vector<Float> priPriceList){
+	
+		if(b.presentBill==null)
+			try {
+				b.presentBill=new Bill();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		b.presentBill.clear();
+		int index=0;
+		//judge the shoppoing list of b
+		for(Commodity c:shoppoingList)
+		{
+			if(c.getPromotion()&&priNumList.get(index) >= 2 ) //2 present 1
+			{
+				addCommodityToPresentBill(c,
+						b.presentBill.shoppingList, b.presentBill.priNumList);
+				
+			}
+			index++;
+		}
+		
+		//if have no present
+		if(b.presentBill.shoppingList.size()==0)return false;
+		
+		//if present cacul the sum
+		index=0;
+		b.presentBill.sumPrice=0;
+		for(Commodity c:b.presentBill.shoppingList)
+		{
+			b.presentBill.priPriceList.add(
+					c.getPrice()
+					*b.presentBill.priNumList.get(index));
+			
+			b.presentBill.sumPrice+=b.presentBill.priPriceList.get(index);
+			
+			index++;
+		}
+		
+		return true;
+		
 	}
 	
 	private void priSumUp(){	//sum up all the pri sum up list
-		nowBill.priSumList.clear();
-		int i=0,j=nowBill.shoppingList.size();
+		b.priPriceList.clear();
+		int i=0,j=b.shoppingList.size();
 		for(i=0;i<j;i++)
 		{
-			nowBill.priSumList.add(	  nowBill.shoppingList.index(i).getPrice() 
-									* nowBill.shoppingList.index(i).getDiscount()
-									* nowBill.QuantityList.index(i));
+			b.priPriceList.add(	  b.shoppingList.get(i).getPrice() 
+									* b.shoppingList.get(i).getDiscount()
+									* b.priNumList.get(i));
 		}
 	//	for(Commodity c:nowBill.shoppingList)
 	//		nowBill.priSumList.add(c.getPrice() *c.getDiscount());
@@ -58,17 +147,22 @@ public class CashControl extends DBControl
 		if(isAdd){
 			float price = priPriceList.get(index).floatValue();
 			priPriceList.remove(index);
-			priPriceList.insertElementAt(new Float(price+c.getPrice()*c.getDiscount()), index);
+			priPriceList.insertElementAt(new Float(c.getPrice() 
+											* c.getDiscount()
+											* b.priNumList.get(index)), index);
 			//sumPrice += c.getPrice()*c.getDiscount();
 			//discountPrice += (1-c.getDiscount())*c.getPrice();
 			
 			
-			nowBill.priSumList.add(	  tempCommodity.getPrice() 
-								* tempCommodity.getDiscount()
-								* tempNum);
+			//b.priPriceList.add(	  c.getPrice() 
+		//						* c.getDiscount()
+				//				* b.priNumList.get(index));
 		}
 		else{
-			priPriceList.addElement(new Float(temp.getPrice()*temp.getDiscount()));
+			
+			priPriceList.addElement(new Float(c.getPrice()
+									*c.getDiscount()
+									*b.priNumList.get(index)));
 			
 			//sumPrice += temp.getPrice()*temp.getDiscount();
 			//discountPrice += (1-temp.getDiscount())*temp.getPrice();
@@ -81,38 +175,59 @@ public class CashControl extends DBControl
 						Vector<Float> priPriceList){
 		//sum up all money and discount in bill
 		float sumPrice=0;
-		for(float priSum:priNumList)
+		for(float priSum:priPriceList)
 		{
 			sumPrice+=priSum;
 		}
 		System.out.println(sumPrice);
 		
 		float discountPrice=0;
-		int i=0;j=nowBill.shoppingList.size();
+		int i=0,j=b.shoppingList.size();
 		for(i=0;i<j;i++)
 		{
-			discountPrice+=	  shoppingList.index(i).getPrice() 
-							* (1- shoppingList.index(i).getDiscount())
-							* priNumList.index(i);
+			discountPrice+=	  b.shoppingList.get(i).getPrice() 
+							* (1- b.shoppingList.get(i).getDiscount())
+							* b.priNumList.get(i);
 		}
 		System.out.println(discountPrice);
+		
 		b.setSumPrice(sumPrice);
-		b.setDiscountPrice(discountPrice);
+		
+		if(formPresentBill(shoppoingList,priNumList,priPriceList))
+			b.setDiscountPrice(discountPrice + b.presentBill.getSumPrice());
+		else b.setDiscountPrice(discountPrice);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	};
 		
 	
 	
 	//添加商品，返回商品信息
-	public String addCommodity(String barcode) throws Exception
+	public String addCommodity(String barcode,int num) throws Exception
 	{
-		//获取账单信息
-		Vector<Commodity>	shoppoingList	= b.getShoppoingList();
-		Vector<Integer> 	priNumList		= b.getPriNumList();
-		Vector<Float> 		priPriceList	= b.getPriPriceList();
-		float 				sumPrice 		= b.getSumPrice();
-		float				discountPrice	= b.getDiscountPrice();
+		if(num<1)throw new Exception("new commodity num below to 1!");
 		
-		Commodity temp = control.searchCommodity(barcode);	//数据库中查找相应商品
+		//获取账单信息
+		Vector<Commodity>	shoppoingList	= b.shoppingList;
+		Vector<Integer> 	priNumList		= b.priNumList;
+		Vector<Float> 		priPriceList	= b.priPriceList;
+		float 				sumPrice 		= b.getSumPrice();
+		//float				discountPrice	= b.getDiscountPrice();
+		
+		Vector<Commodity> searchResult=searchCommodityByBarcode(barcode);
+		if(searchResult.size()==0){throw new Exception("not found");}
+			
+		Commodity temp =searchResult.get(0);	//数据库中查找相应商品
 		
 		//if success
 		boolean isAdd = false;
@@ -123,9 +238,12 @@ public class CashControl extends DBControl
 			{
 				//exist
 				isAdd = true;
-				int num = priNumList.get(index).intValue();
+				int oldNum = priNumList.get(index).intValue();
+				
+				changeCommodityNum(barcode,0-num);
+				
 				priNumList.remove(index);
-				priNumList.insertElementAt(new Integer(++num), index);
+				priNumList.insertElementAt(new Integer(num+oldNum), index);
 				
 				
 				
@@ -139,8 +257,8 @@ public class CashControl extends DBControl
 		{
 			//not exist
 			shoppoingList.addElement(temp);
-			priNumList.addElement(new Integer(1));
-			
+			priNumList.addElement(new Integer(num));
+			changeCommodityNum(barcode,0-num);
 			//priSumUp(tempCommodity);
 
 		}
@@ -152,12 +270,43 @@ public class CashControl extends DBControl
 		
 		return temp.toString();
 	}
-	
-	
-	public void modifyBillInf(){
-		//modify commodity number in bill
+
+	private void cancelCommodity(int index)throws Exception
+	{
+		Vector<Commodity>	shoppoingList	= b.shoppingList;
+		Vector<Integer> 	priNumList		= b.priNumList;
+		Vector<Float> 		priPriceList	= b.priPriceList;
 		
+		if(priNumList.get(index)<0)throw new Exception("此商品现有小结数量小于0");
+		
+		changeCommodityNum(shoppoingList.get(index).getBarcode(), priNumList.get(index));
+		
+		shoppoingList.remove(index);
+		priNumList.remove(index);
+		priPriceList.remove(index);
+		
+		
+		sumUp(shoppoingList,priNumList,priPriceList);
+	}
+	
+	
+	public void modifyBillInf(int index,int num)throws Exception{
+		//modify commodity number in bill
+		Vector<Commodity>	shoppoingList	= b.shoppingList;
+		Vector<Integer> 	priNumList		= b.priNumList;
+		Vector<Float> 		priPriceList	= b.priPriceList;
 		//DB Stock changed
+		
+		if(num==0){cancelCommodity(index);return;}
+		
+		changeCommodityNum(shoppoingList.get(index).getBarcode(), priNumList.get(index)-num);
+		
+		priNumList.remove(index);
+		priNumList.insertElementAt(new Integer(num), index);
+		
+		
+		priSumUp(shoppoingList.get(index),priPriceList,true,index);
+		sumUp(shoppoingList,priNumList,priPriceList);
 		
 	};
 	public String getSumList()
@@ -165,6 +314,46 @@ public class CashControl extends DBControl
 		return b.toString();
 	}
 	
+	public String getCommodityList()
+	{
+		int i=0,j=0;
+		String out="";
+		for(Commodity c:b.shoppingList)
+		{
+			j=b.priNumList.get(i);
+			while(j-->0)out+="\n"+c.getBarcode();
+			
+			i++;
+		}
+		return out+"\n";
+	}
+	public String getCommodityListIndex()
+	{
+		String out="";
+		for(Commodity c:b.shoppingList)
+		{
+			out+=c.toString();
+		}
+		return out+"\n";
+	}
+	
+	 public int getNumInBill(int index)
+	 {
+		 if(index<0||index+1>b.priNumList.size())return (-1);
+		return b.priNumList.get(index);
+		 
+	 }
+	 public Commodity getCommodityInBill(int index)throws Exception
+	 {
+		 if(index<0||index+1>b.shoppingList.size())throw new Exception("index error of get Commodity in bill");
+			
+			return b.shoppingList.get(index);
+	 }
+	 
+	 public int getCommoditySizeInBill(){
+		 return b.shoppingList.size();
+	 }
+	 
 	public void end()
 	{
 		b.clear();

@@ -104,7 +104,7 @@ public class DBControl
     public float getDiscount(String barcode) throws Exception
     {
     	float discount = 1;
-    	String sql = "SELECT discount FROM sale_commodity WHERE barcode=\'" + barcode + "\'";
+    	String sql = "SELECT discount FROM discount_commodity WHERE barcode=\'" + barcode + "\'";
     	ResultSet rs = null;
     	try {
 			rs=statement.executeQuery(sql);

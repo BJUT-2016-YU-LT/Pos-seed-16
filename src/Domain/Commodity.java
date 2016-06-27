@@ -43,7 +43,7 @@ public class Commodity {
 		s += "price:\'"+Float.toString(price)+"\',\n";
         if(discount != 1)
         	s += "discount:\'"+Float.toString(discount)+"\',\n";
-        s += "promotion\'"+Boolean.toString(promotion)+"\',";
+        s += "promotion:\'"+Boolean.toString(promotion)+"\',\n\n";
         return s;
 	}
 };
