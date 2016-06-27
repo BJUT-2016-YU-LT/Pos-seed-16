@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 package GUI;
 
+=======
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

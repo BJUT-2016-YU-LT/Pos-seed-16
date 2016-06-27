@@ -1,5 +1,3 @@
-package GUI;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -8,8 +6,11 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.ActionListener;
+<<<<<<< HEAD
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+=======
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -30,6 +31,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+<<<<<<< HEAD
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -39,6 +41,10 @@ import Domain.Commodity;
 
 import control.CashControl;
 import control.StaffDBControl;
+=======
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 
 public class GUI {  
 	public static void main(String[] args) {  
@@ -46,8 +52,12 @@ public class GUI {
 		 L.setLocationRelativeTo(null);   
   //      NewFrame f=new NewFrame("");
   //      f.setLocationRelativeTo(null);   
+<<<<<<< HEAD
     }
 	
+=======
+    }  
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 }
   
 
@@ -81,7 +91,11 @@ public class GUI {
     JLabel Labe2=new JLabel("商品码");
     JLabel Labe3=new JLabel("商品名");
     JButton btnO=new JButton("添加");
+<<<<<<< HEAD
     JButton btnO1=new JButton("添加");
+=======
+    JButton btnO1=new JButton("搜索");
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
     JButton btnCH=new JButton("更改");
     JButton btnE=new JButton("创建");
     JButton btnC=new JButton("取消");
@@ -96,6 +110,7 @@ public class GUI {
     ScrollPane jsp3=new ScrollPane(); 
     
     Container contentPane;                                             //主容器
+<<<<<<< HEAD
     
     CashControl cc;
     Vector<Commodity> commodityResult=new Vector<Commodity>();
@@ -104,6 +119,9 @@ public class GUI {
     int userId=0;
     
     
+=======
+    
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
     Vector<String> vector = new Vector<String>();
     DefaultListModel dlm = new DefaultListModel();                   
     int open=0;
@@ -122,6 +140,7 @@ public class GUI {
   	  
   	  list1 = new JList<String>(vector);	   
   	  pnlscan.add(tab);                                                //布局
+<<<<<<< HEAD
   	  
   	  pnlscan.add(Labe4);
   	  pnlscan.add(pnlscanQ);
@@ -130,6 +149,16 @@ public class GUI {
   	  pnlscan.add(btnC);
   	  pnlscan.add(btnCA);
   	  pnlscan.add(jsp3); 
+=======
+  	  pnlscan.add(jsp3); 
+  	  pnlscan.add(Labe4);
+  	  pnlscan.add(pnlscanQ);
+  	  pnlscan.add(btnCH);  	  
+  	  pnlscan.add(btnE);
+  	  pnlscan.add(btnC);
+  	  pnlscan.add(btnCA);
+  	  
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 	  int size=20;                                                      //列表字体大小
 	  list1.setFont(new Font("Serif",Font.PLAIN,size));
   	  
@@ -156,9 +185,15 @@ public class GUI {
   	  p2.add(btnO1);
   	  
   	  Border border=new LineBorder(Color.black);                    //定义边界
+<<<<<<< HEAD
   //	  tab.setBorder(border);	
   //	  tab1.setBorder(border);	
   //	  p3.setBorder(border);	
+=======
+  	  tab.setBorder(border);	
+  	  tab1.setBorder(border);	
+  	  p3.setBorder(border);	
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
   	  
   	  Dimension d=new Dimension(30,600);                           //定义区域大小
   	  d=new Dimension(300,110);
@@ -182,7 +217,11 @@ public class GUI {
       pnl1.setPreferredSize(new Dimension(450, 200));
   	  pnlscanid.setPreferredSize(new Dimension(230, 30));
   	  pnlscanname.setPreferredSize(new Dimension(230, 30));
+<<<<<<< HEAD
   	  pnlscanQ.setPreferredSize(new Dimension(200, 30));
+=======
+  	  pnlscanQ.setPreferredSize(new Dimension(199, 30));
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
   	  
   	  p3.setBackground(Color.white);                                    //设置模块颜色
   	  pnlTest.setBackground(Color.white);
@@ -197,6 +236,7 @@ public class GUI {
   	  pnlTest.setEditable(false);         
   	  pnlTest1.setEditable(false);                                     //设置文本框不可写 
   	  pnlres.setEditable(false);
+<<<<<<< HEAD
   	  
   	  btnO.setEnabled(false);    
   	  btnO1.setEnabled(false);    
@@ -241,6 +281,32 @@ public class GUI {
           } 
         } 
   	  }); 
+=======
+  	  
+  	  btnO.setEnabled(false);    
+  	  btnO1.setEnabled(false);    
+  	  btnCH.setEnabled(false);    
+  	  btnE.setEnabled(true);                                           //设置按钮不可读
+  	  btnC.setEnabled(false);
+	  btnA.setEnabled(false);
+	  btnD.setEnabled(false);
+  	  
+  	    
+  	  pnlres.setBorder(new TitledBorder("bill"));                      //设置文本框标题
+      p3.setBorder(new TitledBorder(""));
+  	  
+  	  jsp .add(pnlTest);                                                //添加滚条
+  	  jsp.setSize(280,180);
+  	  
+  	  jsp1 .add(pnlres);
+  	  jsp1.setSize(300,230);
+  	  
+  	  jsp2 .add(pnlTest1);
+  	  jsp.setSize(300,180);
+  	  
+  	  jsp3.add(p3);
+  	  jsp3.setSize(300,300);
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
   	  
    	  btnO.addMouseListener((MouseListener) new MYListenerO1());        //添加监视器
    	  btnO1.addMouseListener((MouseListener) new MYListenerO());  
@@ -258,6 +324,7 @@ public class GUI {
 
    	  list1.setModel(dlm);
       list1.addListSelectionListener((ListSelectionListener) this);
+<<<<<<< HEAD
       
       pnlscanname.getDocument().addDocumentListener (new OnValueChanged()); 
       
@@ -363,6 +430,12 @@ public class GUI {
     }
     
     
+=======
+  	  setVisible(true);
+  	  
+    }
+    
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
     public void valueChanged(ListSelectionEvent e)
     {
         int tmp = 0;
@@ -371,18 +444,26 @@ public class GUI {
         {
             tmp = index[i];
             stmp =vector.get(tmp)+"  ";
+<<<<<<< HEAD
             
         }
         
         commodityIndex=tmp;
         
         
+=======
+        }
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
     }
     
     private ActionListener ActionListener() {                               //文本框监视器
 		if(open==0){
 			pnlscanid.setEditable(false);
 			pnlscanname.setEditable(false);
+<<<<<<< HEAD
+=======
+			pnlscanQ.setEditable(false);
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 		}
 		return null;
 	}
@@ -456,6 +537,7 @@ public class GUI {
    			stmp="";
    		}
 
+<<<<<<< HEAD
     }
 
 	class MYListenerO implements MouseListener{                              //添加商品按钮监视器
@@ -535,6 +617,63 @@ public class GUI {
     	@Override
     	public void mouseClicked(MouseEvent arg0) {
     		myclockO();
+=======
+	class MYListenerO implements MouseListener{                              //添加商品按钮监视器
+    	@Override
+    	public void mouseClicked(MouseEvent arg0) {
+   	     p3.setBorder(new TitledBorder("相关商品"));
+    		if(search==0){
+    			if(!pnlscanname.getText().equals("")){
+    			btnO1.setText("添加");
+    			search=1;
+    			dlm.clear();
+    			vector.add("1");
+    			dlm.addElement(vector.get(0));
+    			}
+    		}
+    		else{
+    			search=0;    			
+    			if(pnlscanname.getText().equals(""))
+    				JOptionPane.showMessageDialog(null, "请输入商品", "请输入商品", JOptionPane.ERROR_MESSAGE);
+    			else{
+    				if(stmp=="")
+    				JOptionPane.showMessageDialog(null, "请选择商品", "请请选择商品", JOptionPane.ERROR_MESSAGE);
+    			}
+    		if(!pnlscanname.getText().equals("")&&stmp!=""){
+
+    		    pnlTest.append("商品名称:"+ stmp+",数量："+pnlscanQ.getText()+"\n");	
+    			pnlscanQ.setText("1");
+    			pnlscanQ.setEditable(false);
+    			btnO1.setText("搜索");
+    			pnlscanname.setText("");
+    			dlm.clear();
+    			vector.clear();
+    			stmp="";
+    		}
+    		}
+    	}
+    	@Override
+    	public void mouseEntered(MouseEvent arg0) {}
+    	@Override
+    	public void mouseExited(MouseEvent arg0) {}
+    	@Override
+    	public void mousePressed(MouseEvent arg0) {}
+    	@Override
+    	public void mouseReleased(MouseEvent arg0) {}
+    	}
+	
+	class MYListenerO1 implements MouseListener{                                       //添加商品码按钮监视器
+    	@Override
+    	public void mouseClicked(MouseEvent arg0) {
+    	     p3.setBorder(new TitledBorder("商品信息"));
+    		if(pnlscanid.getText().equals(""))
+    			JOptionPane.showMessageDialog(null, "请输入商品码", "请输入商品码", JOptionPane.ERROR_MESSAGE);
+    		if(!pnlscanid.getText().equals("")){
+    			pnlTest.append("商品码"+pnlscanid.getText()+","+pnlscanQ.getText()+"\n");
+    			pnlscanQ.setText("1");
+    			pnlscanQ.setEditable(false);
+    		}
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
     	}
     	@Override
     	public void mouseEntered(MouseEvent arg0) {}
@@ -560,7 +699,10 @@ public class GUI {
 		    pnlscanid.setEditable(false);
 		    pnlscanname.setEditable(false);
 		    pnlTest.setText("");
+<<<<<<< HEAD
 		    pnlTest1.setText("");
+=======
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 		    pnlres.append("取消账单");
 			//cancel()                传进去一个取消信号
     		
@@ -579,6 +721,7 @@ public class GUI {
 	class MYListenerA implements MouseListener{                                 //显示总帐单监视器
     	@Override
     	public void mouseClicked(MouseEvent arg0) {
+<<<<<<< HEAD
     	    p3.setBorder(new TitledBorder("当前账单"));
     	     
     	    int j=cc.getCommoditySizeInBill();
@@ -604,6 +747,11 @@ public class GUI {
     	    
  			
  			
+=======
+    	     p3.setBorder(new TitledBorder("当前账单"));
+ 			vector.add("1");
+ 			dlm.addElement( vector.get(0));
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
     	}
     	@Override
     	public void mouseEntered(MouseEvent arg0) {}
@@ -620,6 +768,7 @@ public class GUI {
     	public void mouseClicked(MouseEvent arg0) {
     	     if(stmp=="")
  				JOptionPane.showMessageDialog(null, "请选择商品", "请请选择商品", JOptionPane.ERROR_MESSAGE);
+<<<<<<< HEAD
 		    
     	    //commodityIndex;
     	    try {
@@ -676,6 +825,34 @@ public class GUI {
     		Loginscreen lo=new Loginscreen("");
     		lo.setLocationRelativeTo(null);
     		dispose();
+=======
+		    pnlTest.append("商品名称:"+ stmp+",数量："+pnlscanQ.getText()+"\n");	
+			pnlscanQ.setText("1");
+			pnlscanQ.setEditable(false);
+			dlm.clear();
+			vector.clear();
+			stmp="";
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
+    	}
+    	@Override
+    	public void mouseEntered(MouseEvent arg0) {}
+    	@Override
+    	public void mouseExited(MouseEvent arg0) {}
+    	@Override
+    	public void mousePressed(MouseEvent arg0) {}
+    	@Override
+    	public void mouseReleased(MouseEvent arg0) {}
+    	}
+<<<<<<< HEAD
+
+
+=======
+	
+	
+	class MYListenerCA implements MouseListener{                           //注销按钮监视器
+    	@Override
+    	public void mouseClicked(MouseEvent arg0) {
+        dispose();
     	}
     	@Override
     	public void mouseEntered(MouseEvent arg0) {}
@@ -688,6 +865,7 @@ public class GUI {
     	}
 
 
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 	
     class MYListenerE implements MouseListener{                                   //建立结束按钮监视器
     	@Override
@@ -705,8 +883,11 @@ public class GUI {
     		    pnlscanid.setEditable(true);
     		    pnlscanname.setEditable(true);
     		    pnlres.setText("");
+<<<<<<< HEAD
     		    cc.newBill();
     		   
+=======
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
     		    
     	   }
     		else{
@@ -724,12 +905,16 @@ public class GUI {
     		    pnlscanid.setText("");
     		    pnlscanname.setText("");
     		    pnlscanQ.setText("1");
+<<<<<<< HEAD
     		    pnlres.append("录入完成\n"+cc.getSumList());
     		    
     		    vector.clear();
     		    dlm.clear();
     		    cc.finishBill();
     		    //
+=======
+    		    pnlres.append("录入完成");
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
     		}
            
     	}
@@ -759,6 +944,7 @@ public class GUI {
     	@Override
     	public void mouseReleased(MouseEvent arg0) {}
     	}
+<<<<<<< HEAD
 	    @Override
 	    protected void finalize()
 	    {
@@ -780,5 +966,8 @@ public class GUI {
 				e.printStackTrace();
 			}
 	    }
+=======
+
+>>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
  }
  
