@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import Domain.Commodity;
 import Domain.Bill;
+import control.CashControl;
 import control.DBControl;
 
 /**
@@ -115,7 +116,7 @@ public class CashControlTest {
 		
 		//then 判断商品小结数值
 		if(Math.abs(cc.b.priPriceList.get(0)-except[0]) >0.01)
-			fails("不打折商品小结计算错误");
+			fail("不打折商品小结计算错误");
 		
 	
 		
@@ -125,7 +126,7 @@ public class CashControlTest {
 				
 		//then
 		if(Math.abs(cc.b.priPriceList.get(1)-except[1]) >0.01)
-			fails("打扎商品小结计算错误");
+			fail("打扎商品小结计算错误");
 		
 		//after 2 test del the bill
 		cc.delBill();
@@ -140,7 +141,7 @@ public class CashControlTest {
 		
 		//then
 		if(Math.abs(cc.b.priPriceList.get(0)-except[2]) >0.01)
-			fails("多个不打折商品小结计算错误");
+			fail("多个不打折商品小结计算错误");
 
 		//when
 		cc.addCommodity(testCommodity[2]);
@@ -150,7 +151,7 @@ public class CashControlTest {
 				
 		//then
 		if(Math.abs(cc.b.priPriceList.get(1)-except[3]) >0.01)
-			fails("多个打折商品小结计算错误");
+			fail("多个打折商品小结计算错误");
 			
 		cc.delBill();
 		
@@ -173,9 +174,9 @@ public class CashControlTest {
 		
 		//then
 		if(Math.abs(cc.b.sumPrice-sumExcept[0]) > 0.01)
-			fails("不打折一个商品结算的总价格错误");
+			fail("不打折一个商品结算的总价格错误");
 		if(Math.abs(cc.b.discountPrice-saveExcept[0] > 0.01))
-			fails("不打折一个商品结算的总优惠价格错误");
+			fail("不打折一个商品结算的总优惠价格错误");
 		
 		cc.delBill();
 		
@@ -185,9 +186,9 @@ public class CashControlTest {
 	
 		//then
 		if(Math.abs(cc.b.sumPrice-sumExcept[1]) > 0.01)
-			fails("打折一个商品结算的总价格错误");
+			fail("打折一个商品结算的总价格错误");
 		if(Math.abs(cc.b.discountPrice-saveExcept[1] > 0.01))
-			fails("打折一个商品结算的总优惠价格错误");
+			fail("打折一个商品结算的总优惠价格错误");
 		
 		cc.delBill();
 		
@@ -201,9 +202,9 @@ public class CashControlTest {
 		
 		//then
 		if(Math.abs(cc.b.sumPrice-sumExcept[2]) > 0.01)
-			fails("几种,几个 不打折商品结算的价格错误");
+			fail("几种,几个 不打折商品结算的价格错误");
 		if(Math.abs(cc.b.discountPrice-saveExcept[2] > 0.01))
-			fails("几种,几个 不打折商品优惠的价格错误");
+			fail("几种,几个 不打折商品优惠的价格错误");
 			
 		cc.delBill();
 		
@@ -217,9 +218,9 @@ public class CashControlTest {
 		
 		//then
 		if(Math.abs(cc.b.sumPrice-sumExcept[3]) > 0.01)
-			fails("几种,几个 打折商品结算的价格错误");
+			fail("几种,几个 打折商品结算的价格错误");
 		if(Math.abs(cc.b.discountPrice-saveExcept[3] > 0.01))
-			fails("几种,几个 打折商品优惠的价格错误");
+			fail("几种,几个 打折商品优惠的价格错误");
 		
 		cc.delBill();
 		
@@ -234,9 +235,9 @@ public class CashControlTest {
 		
 		//then
 		if(Math.abs(cc.b.sumPrice-sumExcept[4]) > 0.01)
-			fails("几种，几个打折和不打折都有的商品的结算价格错误");
+			fail("几种，几个打折和不打折都有的商品的结算价格错误");
 		if(Math.abs(cc.b.discountPrice-saveExcept[4] > 0.01))
-			fails("几种，几个打折和不打折都有的商品的优惠价格错误");
+			fail("几种，几个打折和不打折都有的商品的优惠价格错误");
 		
 		cc.delBill();
 		
@@ -255,15 +256,15 @@ public class CashControlTest {
 
 		//then
 		if(cc.b.shoppingList.size()==0)
-			fails("一个商品也加不上错误");
+			fail("一个商品也加不上错误");
 		else if(cc.b.shoppingList.size()!=2)
-			fails("加的商品种类数错误");
+			fail("加的商品种类数错误");
 		
 		if(cc.b.priNumList[0]!=1)
-			fails("一种商品中加一个错误");
+			fail("一种商品中加一个错误");
 		
 		if(cc.b.priNumList[1]!=2)
-			fails("一种商品加几个错误");
+			fail("一种商品加几个错误");
 		
 	}
 	
@@ -284,7 +285,7 @@ public class CashControlTest {
 		actual=cc.getSumList();
 		//then
 		if(!actual.equals(exceptSumList[0]))
-			fails("一种不打折商品账单错误");
+			fail("一种不打折商品账单错误");
 		cc.delBill();
 		
 		//when
@@ -295,7 +296,7 @@ public class CashControlTest {
 		actual=cc.getSumList();
 		//then
 		if(!actual.equals(exceptSumList[1]))
-			fails("一种打折商品账单错误");
+			fail("一种打折商品账单错误");
 		cc.delBill();
 		
 		//when
@@ -309,7 +310,7 @@ public class CashControlTest {
 		actual=cc.getSumList();
 		//then
 		if(!actual.equals(exceptSumList[2]))
-			fails("几种打折和不打折商品账单");
+			fail("几种打折和不打折商品账单");
 		cc.delBill();
 		
 	}

@@ -18,6 +18,7 @@ public class CommodityDBControlTest {
 
 	CommodityDBControl cdbc=null;
 	String[] CommodityBarcode={1,2,3,4};	//1,2,3 is exist commodity 4 is not exist
+											// 3 is can promotion commodity
 	
 	String[] CommodityName={1,2,3,4};		//1,2 is exist name, 3 is relative name,4 is not exist name
 	
@@ -212,6 +213,22 @@ public class CommodityDBControlTest {
 	
 	@Test
 	public void testGetPromotion(){
+		boolean status=false;
+		//when
+		status=cdbc.getPromotion(CommodityBarcode[0]);
+		//then
+		if(status==true)fail("get promotion wrong for not promotion commodity have a promotion");
+		
+		//when
+		status=cdbc.getPromotion(CommodityBarcode[3]);
+		//then
+		if(status==true)fail("get promotion wrong for not exist commodity have a promotion");
+		
+		//when
+		status=cdbc.getPromotion(CommodityBarcode[2]);
+		//then
+		if(status==false)fail("get promotion wrong for promotion commodity have no promotion");
+		
 		
 	}
 	

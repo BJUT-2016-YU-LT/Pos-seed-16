@@ -224,6 +224,27 @@ public class CommodityDBControl
     }
     
     
+    public int getNumInStock(String barcode) throws SQLException
+    {
+    	String sql = "SELECT num FROM stock "+"WHERE barcode=\'"+barcode+"\'";
+    	ResultSet rs = null;
+    	Statement statement = null;
+    	int num = 0;
+    	try {
+    		statement = conn.createStatement();
+			rs=statement.executeQuery(sql);
+			if(rs.next())
+				num = rs.getInt("num");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		} finally {
+			statement.close();
+			rs.close();
+		}
+    	return num;
+    }
     
     @Override
     public void finalize() throws SQLException{           
