@@ -1,8 +1,6 @@
-package control;
+package test;
 
 import static org.junit.Assert.*;
-
-import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,32 +37,78 @@ public class StaffDBControlTest {
 
 	@Test
 	public void testLogin() {
-		String[] userName={1,2,3,4,5,6,7,8};	//1,2,3,4 is normal user , 5,6,7,8 is abnormal
-		String[] password={1,2,3,4,5,6,7,8};
-		Random ran=new Random();
-		int i=0;
+		String[] userName={"утр╣б║","лллллл"};	//1 is normal user , 2 is abnormal
+		String[] password={"123456","404"};
+		
 		int id=0;
-		for(i=0;i<200;i++)
-		{
+		
 			try{
-				id=sdbc.login(userName[ran.nextInt()%8], password[ran.nextInt()%8]);
-			}catch(Exception e)
+				//when
+				id=sdbc.login(userName[1], password[1]);
+			}
+			catch(Exception e)
 			{
 				e.printStackTrace();
 			}
-		}
+			//then
+			if(id!=0)fail("login error when submit a not existing user");
 		
-		fail("Not yet implemented");
+			try{
+				//when
+				id=sdbc.login(userName[0], password[0]);
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+				//then
+				fail("login error when submit a exist user");
+			}
+			try {
+				sdbc.logout(id);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				fail(e.getMessage());
+			}
+			
+		
 	}
 
 	@Test
 	public void testLogout() {
-		fail("Not yet implemented");
+		String userName="Цфлз";
+		String password="123456";
+		int id=0;
+		//given
+		try{
+			
+			id=sdbc.login(userName, password);
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			fail("login error when test logout");
+		}
+		//when
+		try{
+				sdbc.logout(id);
+		
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			fail("logout fail when test logout");
+		}
+	
 	}
 
 	@Test
 	public void testDisconnect() {
-		fail("Not yet implemented");
+		try{
+			sdbc.disconnect();
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+			fail("test disconnect error");
+		}
+	
 	}
 	
 

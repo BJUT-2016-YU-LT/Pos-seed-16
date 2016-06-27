@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 package GUI;
 
-=======
->>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -26,11 +23,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-<<<<<<< HEAD
 import control.StaffDBControl;
 
-=======
->>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 public class Loginscreen extends JFrame{
 	private static final long serialVersionUID = 1L; 
     Container contentPane;
@@ -57,12 +51,9 @@ public class Loginscreen extends JFrame{
     
     ImageIcon background; 
     
-<<<<<<< HEAD
     StaffDBControl sdbc;
     int userId=0;
     
-=======
->>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 	Loginscreen(String title){
 		super("登陆界面");                                       
 	  	this.setSize(500,300);                                            //设置总大小
@@ -115,15 +106,12 @@ public class Loginscreen extends JFrame{
 	    	 rdo.setSelected(false);
 	    }
 	  	setVisible(true);
-<<<<<<< HEAD
 	  	
 	  	try{
 	  		sdbc=new StaffDBControl();
 	  	}catch(Exception e){
 	  		e.printStackTrace();
 	  	}
-=======
->>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 	}
 	
 	class MYListenerN implements MouseListener{                                    //添加按钮监视器
@@ -135,7 +123,6 @@ public class Loginscreen extends JFrame{
     		else if(password.getText().equals(""))
     			JOptionPane.showMessageDialog(null, "The password Empty", "The password Empty", JOptionPane.ERROR_MESSAGE);
     		else{
-<<<<<<< HEAD
     			
     			try {
 					userId=sdbc.login(pnlscanid.getText(), password.getText());
@@ -158,25 +145,6 @@ public class Loginscreen extends JFrame{
     	         
     	         dispose();
     		
-=======
-    			Connection con = new Connection(pnlscanid.getText(),password.getText(),check);
-    			check=con.newconnect(pnlscanid.getText(),password.getText());
-    		if(check==0){
-    			JOptionPane.showMessageDialog(null, "The User Name Error", "The User Name Error", JOptionPane.ERROR_MESSAGE);
-    			pnlscanid.setText("");password.setText("");
-    		}		
-    		if(check==1){
-    			JOptionPane.showMessageDialog(null, "The password Error", "The password Error", JOptionPane.ERROR_MESSAGE); 
-    			password.setText("");
-    		}
-    		if(check==2){
-    			if(rdo.isSelected()){re=1;}
-    			else re=0;
-    			save.saveFile(re);save.savename(pnlscanid.getText());save.savepassword(password.getText());
-    			 NewFrame f=new NewFrame("");
-    	         f.setLocationRelativeTo(null);   
-    		}
->>>>>>> da5390a3df01c39cf7d7cc2d4d60799fb6676934
 
     		}
     		
