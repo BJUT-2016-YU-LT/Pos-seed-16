@@ -7,9 +7,10 @@ import Domain.Commodity;
 
 
 
-public class CashControl extends DBControl
+public class CashControl extends CommodityDBControl
 {
-	private Bill b;	//账单
+	private Bill b=null;	//账单
+	private Bill presentBill=null;	//赠送商品账单
 	//DBControl control;	
 	//数据库控制类
 	public CashControl() throws Exception
@@ -26,17 +27,19 @@ public class CashControl extends DBControl
 	
 	public void cancelBill(){
 		//cancel the bill 
-		for(Commodity c:nowBill.shoppingList)
+		for(int i=0;i<nowBill.shoppingList.size();i++)
 		{
 			//a function can cancel by commodity
-			cancelCommodity(c);
+			cancelCommodity(i);
 		}
-		delBill();
+		b.clear();
+		b=null;
+		
 	};
 	
-	public void delBill(){
+	public void finishBill(){
+		
 		b.clear();
-		del b;
 		b=null;
 	}
 	
@@ -103,16 +106,18 @@ public class CashControl extends DBControl
 	
 	
 	//添加商品，返回商品信息
-	public String addCommodity(String barcode) throws Exception
+	public String addCommodity(String barcode,int num) throws Exception
 	{
+		if(num<1)throw new Exception("new commodity num below to 1!");
+		
 		//获取账单信息
 		Vector<Commodity>	shoppoingList	= b.getShoppoingList();
 		Vector<Integer> 	priNumList		= b.getPriNumList();
 		Vector<Float> 		priPriceList	= b.getPriPriceList();
 		float 				sumPrice 		= b.getSumPrice();
-		float				discountPrice	= b.getDiscountPrice();
+		//float				discountPrice	= b.getDiscountPrice();
 		
-		Commodity temp = control.searchCommodity(barcode);	//数据库中查找相应商品
+		Commodity temp =searchCommodityByName(barcode);	//数据库中查找相应商品
 		
 		//if success
 		boolean isAdd = false;
@@ -139,7 +144,7 @@ public class CashControl extends DBControl
 		{
 			//not exist
 			shoppoingList.addElement(temp);
-			priNumList.addElement(new Integer(1));
+			priNumList.addElement(new Integer(num));
 			
 			//priSumUp(tempCommodity);
 
@@ -153,11 +158,42 @@ public class CashControl extends DBControl
 		return temp.toString();
 	}
 	
-	
-	public void modifyBillInf(){
-		//modify commodity number in bill
+	private void cancelCommodity(int index)throws Exception
+	{
+		Vector<Commodity>	shoppoingList	= b.getShoppoingList();
+		Vector<Integer> 	priNumList		= b.getPriNumList();
+		Vector<Float> 		priPriceList	= b.getPriPriceList();
 		
+		if(priNumList.get(index)<0)throw new Exception("此商品现有小结数量小于0");
+		
+		changeCommodityNum(shoppoingList.get(index).getBarcode(), 0-priNumList.get(index));
+		
+		shoppoingList.remove(index);
+		priNumList.remove(index);
+		priPriceList.remove(index);
+		
+		
+		sumUp(shoppoingList,priNumList,priPriceList);
+	}
+	
+	
+	public void modifyBillInf(int index,int num)throws Exception{
+		//modify commodity number in bill
+		Vector<Commodity>	shoppoingList	= b.getShoppoingList();
+		Vector<Integer> 	priNumList		= b.getPriNumList();
+		Vector<Float> 		priPriceList	= b.getPriPriceList();
 		//DB Stock changed
+		
+		if(num==0){cancelCommodity(index);return;}
+		
+		changeCommodityNum(shoppoingList.get(index).getBarcode(), num-priNumList.get(index));
+		
+		priNumList.remove(index);
+		priNumList.insertElementAt(new Integer(num), index);
+		
+		
+		priSumUp(shoppoingList.get(index),priPriceList,true,index);
+		sumUp(shoppoingList,priNumList,priPriceList);
 		
 	};
 	public String getSumList()

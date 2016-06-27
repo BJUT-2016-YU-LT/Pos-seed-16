@@ -8,6 +8,9 @@ public class Commodity {
 	private float discount = 1;	//zhe kou
 	private boolean promotion = false;
 	
+	private int promotionCondition;
+	private int promotionNum;
+	
 	public void setName(String name){this.name=name;};
 	public String getName(){return name;};
 	public void setBarcode(String barcode){this.barcode=barcode;};
@@ -19,6 +22,9 @@ public class Commodity {
 	public void setDiscount(Float discount){this.discount=discount;};
 	public float getDiscount(){return discount;};
 	public boolean getPromotion(){return promotion;};
+	
+	public int getPromotionCondition(){return promotionCondition;}
+	public int getPromotionNum(){return promotionNum;};
 	
 	public Commodity()
 	{}
