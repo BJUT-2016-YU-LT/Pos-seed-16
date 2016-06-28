@@ -27,6 +27,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -42,6 +44,13 @@ import control.StaffDBControl;
 
 public class GUI {  
 	public static void main(String[] args) {  
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Loginscreen L=new Loginscreen("");
 		 L.setLocationRelativeTo(null);   
   //      NewFrame f=new NewFrame("");
@@ -111,9 +120,10 @@ public class GUI {
     String stmp = "";
     
     NewFrame(int userId) {  
-  	  super("pos机");                                       
-  	  this.setSize(670,550);                                            //设置总大小
-
+  	  super("pos机");                                                                                  //设置总大小
+	  setMaximumSize(new Dimension(670,550));
+	  setMinimumSize(new Dimension(670,550));
+	  setResizable(false);
   	  contentPane=getContentPane();  
   	  contentPane.setLayout(new FlowLayout());      
   	  contentPane.add(pnlscan);
@@ -155,10 +165,10 @@ public class GUI {
   	  p2.add(pnlscanname);
   	  p2.add(btnO1);
   	  
-  	  Border border=new LineBorder(Color.black);                    //定义边界
-  //	  tab.setBorder(border);	
-  //	  tab1.setBorder(border);	
-  //	  p3.setBorder(border);	
+  	  //Border border=new LineBorder(Color.black);                    //定义边界
+  	  //tab.setBorder(border);	
+  	  //tab1.setBorder(border);	
+  	  //p3.setBorder(border);	
   	  
   	  Dimension d=new Dimension(30,600);                           //定义区域大小
   	  d=new Dimension(300,110);
@@ -182,7 +192,7 @@ public class GUI {
       pnl1.setPreferredSize(new Dimension(450, 200));
   	  pnlscanid.setPreferredSize(new Dimension(230, 30));
   	  pnlscanname.setPreferredSize(new Dimension(230, 30));
-  	  pnlscanQ.setPreferredSize(new Dimension(200, 30));
+  	  pnlscanQ.setPreferredSize(new Dimension(230, 30));
   	  
   	  p3.setBackground(Color.white);                                    //设置模块颜色
   	  pnlTest.setBackground(Color.white);
@@ -435,7 +445,12 @@ public class GUI {
 					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Wrong", "The num is illegal", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
+					
+					dlm.clear();
+		   			vector.clear();
+					return;
 				}
    			
    			
@@ -496,15 +511,22 @@ public class GUI {
 				dlm.addElement(vector.get(0));
 			}else
 			{
+				boolean status=false;
 				try {
 					cc.addCommodity(commodityResult.get(0).getBarcode(), Integer.parseInt(pnlscanQ.getText()) );
-				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					status=true;
+					JOptionPane.showMessageDialog(null, e.getMessage(), "wrong", JOptionPane.ERROR_MESSAGE);
+					
+					vector.clear();
+					dlm.clear();
+					return;
+					
 				}
+				pnlres.setText("");
+				pnlres.append("录入继续\n"+cc.getSumList());
 				
 				vector.add(commodityResult.get(0).getName()+"  单位："+
 						commodityResult.get(0).getUnit()+"  价格："+
@@ -525,7 +547,7 @@ public class GUI {
    		    
 				//pnlTest.append("商品码"+pnlscanid.getText()+","+pnlscanQ.getText()+"\n");
 				pnlscanQ.setText("1");
-				pnlscanQ.setEditable(false);
+				pnlscanQ.setEditable(true);
 			}	
 		}
 	}
@@ -629,8 +651,11 @@ public class GUI {
 				e.printStackTrace();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Wrong", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
+    	    pnlres.setText("");
+    	    pnlres.append("录入继续\n"+cc.getSumList());
     	    
     	    //pnlTest.append("商品名称:"+ stmp+",数量："+pnlscanQ.getText()+"\n");	
     	    
@@ -698,7 +723,6 @@ public class GUI {
     			btnO1.setEnabled(true);
     			btnCH.setEnabled(true);
     			btnC.setEnabled(true);
-    			btnA.setEnabled(true);
     			btnD.setEnabled(true);
     			btnE.setText("完成");
     		    pnlTest.append("开始创立\n");      		
@@ -714,7 +738,6 @@ public class GUI {
     			btnO.setEnabled(false);
     			btnO1.setEnabled(false);
     			btnCH.setEnabled(false);
-    			btnA.setEnabled(false);
     			btnD.setEnabled(false);
     			btnE.setText("创立");
 //    			pnlTest.append(pnlscanid.getText());
@@ -725,7 +748,8 @@ public class GUI {
     		    pnlscanname.setText("");
     		    pnlscanQ.setText("1");
     		    pnlres.append("录入完成\n"+cc.getSumList());
-    		    
+    		    pnlTest.setText("");
+    		    pnlTest1.setText("");
     		    vector.clear();
     		    dlm.clear();
     		    cc.finishBill();

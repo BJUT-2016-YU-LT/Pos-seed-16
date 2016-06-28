@@ -2,14 +2,10 @@ package test;
 
 import static org.junit.Assert.*;
 
-import java.sql.SQLException;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import Domain.Commodity;
-import Domain.Bill;
-import control.DBControl;
 import control.CashControl;
 
 /**

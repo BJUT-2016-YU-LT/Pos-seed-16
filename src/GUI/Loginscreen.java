@@ -9,12 +9,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -56,8 +53,12 @@ public class Loginscreen extends JFrame{
     
 	Loginscreen(String title){
 		super("登陆界面");                                       
-	  	this.setSize(500,300);                                            //设置总大小
+	  	//this.setSize(500,300);                                            //设置总大小
 
+	  	setMaximumSize(new Dimension(500,300));
+	  	setMinimumSize(new Dimension(500,300));
+	  	setResizable(false);
+	  	
 	  	contentPane=getContentPane();  
 	  	contentPane.setLayout(new FlowLayout());   
 	  	contentPane.add(Labe);

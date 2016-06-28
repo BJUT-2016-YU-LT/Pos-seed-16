@@ -33,6 +33,7 @@ public class CashControl extends CommodityDBControl
 	public void cancelBill(){
 		
 		//cancel the bill 
+		if(b==null)return;
 		for(int i=0;i<b.shoppingList.size();i++)
 		{
 			//a function can cancel by commodity
@@ -86,7 +87,7 @@ public class CashControl extends CommodityDBControl
 	public boolean formPresentBill(Vector<Commodity> shoppoingList,
 								Vector<Integer> priNumList,
 								Vector<Float> priPriceList){
-	
+		
 		if(b.presentBill==null)
 			try {
 				b.presentBill=new Bill();
@@ -292,6 +293,10 @@ public class CashControl extends CommodityDBControl
 	
 	public void modifyBillInf(int index,int num)throws Exception{
 		//modify commodity number in bill
+		if(num<0)
+		{
+			throw new Exception("the num is illegal");
+		}
 		Vector<Commodity>	shoppoingList	= b.shoppingList;
 		Vector<Integer> 	priNumList		= b.priNumList;
 		Vector<Float> 		priPriceList	= b.priPriceList;
