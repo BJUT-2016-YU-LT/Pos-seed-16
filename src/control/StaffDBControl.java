@@ -39,6 +39,8 @@ public class StaffDBControl
     {
     	String sql = "SELECT staff_id,is_login FROM staff WHERE staff_name=\'"+name+"\' AND password=\'"+password+"\'";
     	ResultSet rs = null;
+    	
+    	
     	try {
 			rs = statement.executeQuery(sql);
 	    	if(rs.next())
@@ -58,7 +60,7 @@ public class StaffDBControl
 	    				return staff_id;
 	    			}
 	    		}
-	    	}
+	    	}else throw new Exception("wrong username or password");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

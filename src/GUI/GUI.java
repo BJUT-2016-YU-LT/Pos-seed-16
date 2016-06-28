@@ -26,6 +26,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import control.CashControl;
+
 public class GUI {  
 	public static void main(String[] args) {  
 		Loginscreen L=new Loginscreen("");
@@ -81,6 +83,13 @@ public class GUI {
     ScrollPane jsp3=new ScrollPane(); 
     
     Container contentPane;                                             //主容器
+    
+    
+    
+    CashControl cc=new CashControl();
+    
+    
+    
     
     Vector<String> vector = new Vector<String>();
     DefaultListModel dlm = new DefaultListModel();                   
@@ -249,7 +258,7 @@ public class GUI {
     			btnO1.setText("添加");
     			search=1;
     			dlm.clear();
-    			vector.add("1");
+    	b		vector.add("1");
     			dlm.addElement(vector.get(0));
     			}
     		}
@@ -291,6 +300,9 @@ public class GUI {
     		if(pnlscanid.getText().equals(""))
     			JOptionPane.showMessageDialog(null, "请输入商品码", "请输入商品码", JOptionPane.ERROR_MESSAGE);
     		if(!pnlscanid.getText().equals("")){
+    			
+    			cc.searchCommodityByBarcode(pnlscanid.getText());
+    			
     			pnlTest.append("商品码"+pnlscanid.getText()+","+pnlscanQ.getText()+"\n");
     			pnlscanQ.setText("1");
     			pnlscanQ.setEditable(false);
@@ -424,7 +436,9 @@ public class GUI {
     		    pnlscanid.setText("");
     		    pnlscanname.setText("");
     		    pnlscanQ.setText("1");
-    		    pnlres.append("录入完成");
+    		    pnlres.append("录入完成\n"+cc.getSumList(););
+    		    
+    		    //
     		}
            
     	}

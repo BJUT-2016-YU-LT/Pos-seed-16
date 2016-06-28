@@ -67,7 +67,7 @@ public class CommodityDBControl
 				name = rs.getString("name");
 				unit = rs.getString("unit");
 				price = rs.getFloat("price");
-				discount = getDiscount(complete_barcode);
+				discount = getDiscount(complete_barcode,false);
 				promotion = getPromotion(complete_barcode);
 				
 				result.addElement(new Commodity(name,complete_barcode,unit,price,discount,promotion));
@@ -111,7 +111,7 @@ public class CommodityDBControl
 				complete_name = rs.getString("name");
 				unit = rs.getString("unit");
 				price = rs.getFloat("price");
-				discount = getDiscount(barcode);
+				discount = getDiscount(barcode,false);
 				promotion = getPromotion(barcode);
 				
 				result.addElement(new Commodity(complete_name,barcode,unit,price,discount,promotion));
@@ -179,9 +179,10 @@ public class CommodityDBControl
     }
     
     //获取打折信息
-    public float getDiscount(String barcode) throws Exception
+    public float getDiscount(String barcode,boolean ifVIP) throws Exception
     {
     	float discount = 1;
+    	float VIPDiscount = 1;
     	String sql = "SELECT discount FROM discount_commodity WHERE barcode=\'" + barcode + "\'";
     	ResultSet rs = null;
     	Statement statement = null;
@@ -189,7 +190,10 @@ public class CommodityDBControl
     		statement = conn.createStatement();
 			rs=statement.executeQuery(sql);
 			if(rs.next())
+			{
 				discount = rs.getFloat("discount");
+				if(ifVIP)VIPDiscount=rs.getFloat("VIPDiscount");
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -197,7 +201,10 @@ public class CommodityDBControl
 			statement.close();
 			rs.close();
 		}
-    	return discount;
+    	
+    	
+    	
+    	return discount*VIPDiscount;
     }
     
     //获取买二赠一信息
