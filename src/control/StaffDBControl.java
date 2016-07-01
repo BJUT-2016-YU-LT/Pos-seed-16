@@ -31,6 +31,8 @@ public class StaffDBControl
             // statement用来执行SQL语句
             statement = conn.createStatement();
     	} catch (Exception e) {
+    		if(conn != null)
+    			conn.close();
     		throw e;
     	}
     }
@@ -40,6 +42,8 @@ public class StaffDBControl
     	String sql = "SELECT staff_id,is_login FROM staff WHERE staff_name=\'"+name+"\' AND password=\'"+password+"\'";
     	ResultSet rs = null;
     	
+    	if(name.equals(""))throw new Exception("name cannot be wmpty");
+    	if(password.equals(""))throw new Exception("password cannot be empty");
     	
     	try {
 			rs = statement.executeQuery(sql);
@@ -60,12 +64,15 @@ public class StaffDBControl
 	    				return staff_id;
 	    			}
 	    		}
-	    	}else throw new Exception("wrong username or password");
+	    	}
+	    	else
+	    		throw new Exception("user or password wrong");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			rs.close();
+			if(rs != null)
+				rs.close();
 		}
     	return -1;
     }
@@ -78,14 +85,13 @@ public class StaffDBControl
 			rs = statement.executeQuery(sql);
 	    	if(rs.next())
 	    	{
-	    		int staff_id = rs.getInt("staff_id");
 	    		int is_login = rs.getInt("is_login");
 
 	    		if(is_login == 0)
 	    			throw new Exception("您已注销，有问题请联系相关技术人员处理。");
 	    		else
 	   			{
-	   				sql = "UPDATE staff SET is_login = 0 WHERE staff_id="+staff_id;
+	   				sql = "UPDATE staff SET is_login = 0 WHERE staff_id="+id;
 	   				statement.executeUpdate(sql);
 	   			}
 	    	}
@@ -93,7 +99,8 @@ public class StaffDBControl
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			rs.close();
+			if(rs != null)
+				rs.close();
 		}
     }
     

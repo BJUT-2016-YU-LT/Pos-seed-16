@@ -32,7 +32,7 @@ public class CashControl extends CommodityDBControl
 		return b==null?false:true;
 	};
 	
-	public void cancelBill(){
+	public void cancelBill() throws Exception{
 		
 		//cancel the bill 
 		if(b==null)return;
@@ -48,15 +48,28 @@ public class CashControl extends CommodityDBControl
 		}
 		if(b!=null)b.clear();
 		b=null;
+		
+		if(vip==null)return;
 		vipdbc.closeVipStatus(vip);
+		this.vip=null;
+		b.setVipInBill(null);
 		
 	};
 	
-	public void finishBill(){
-		
-		vip.consume((int)b.getSumPrice());
-		vipdbc.closeVipStatus(vip);
+	public void finishBill() throws Exception{
+		if(b==null)return;
+		if(vip != null)
+		{
+			vip.consume((int)b.getSumPrice());
+			if(!vipdbc.setVip(vip))
+				throw new Exception("VIP数据库更新错误。");
+			vipdbc.closeVipStatus(vip);
+		}
+		this.vip=null;
+
 		b.clear();
+		b.setVipInBill(null);
+		//b.clear();
 		//b=null;
 	}
 	
@@ -162,24 +175,26 @@ public class CashControl extends CommodityDBControl
 		
 	}
 	
-	private void priSumUp(){	//sum up all the pri sum up list
+	private void priSumUp() throws Exception{	//sum up all the pri sum up list
 		b.priPriceList.clear();
 		int i=0,j=b.shoppingList.size();
 		for(i=0;i<j;i++)
 		{
 			b.priPriceList.add(	  b.shoppingList.get(i).getPrice() 
-									* b.shoppingList.get(i).getDiscount()
+									* getDiscount(b.shoppingList.get(i).getBarcode(),b.ifSuperVIP())
+									//* b.shoppingList.get(i).getDiscount()
 									* b.priNumList.get(i));
 		}
 
 	};
 	
-	private void priSumUp(Commodity c,boolean isAdd,int index){	//sum up the pri sum up list as new in bill
+	private void priSumUp(Commodity c,boolean isAdd,int index) throws Exception{	//sum up the pri sum up list as new in bill
 		if(isAdd){
 		//	float price = b.priPriceList.get(index).floatValue();
 			b.priPriceList.remove(index);
 			b.priPriceList.insertElementAt(new Float(c.getPrice() 
-											* c.getDiscount()
+											* getDiscount(b.shoppingList.get(index).getBarcode(),b.ifSuperVIP())
+										//	* c.getDiscount()
 											* b.priNumList.get(index)), index);
 			//sumPrice += c.getPrice()*c.getDiscount();
 			//discountPrice += (1-c.getDiscount())*c.getPrice();
@@ -192,13 +207,15 @@ public class CashControl extends CommodityDBControl
 		else{
 			
 			b.priPriceList.addElement(new Float(c.getPrice()
-									*c.getDiscount()
+									* getDiscount(b.shoppingList.get(index).getBarcode(),b.ifSuperVIP())
+									//*c.getDiscount()
 									*b.priNumList.get(index)));
 			
 			//sumPrice += temp.getPrice()*temp.getDiscount();
 			//discountPrice += (1-temp.getDiscount())*temp.getPrice();
 			//System.out.println(discountPrice);
 		}
+		System.out.println("pri"+b.priPriceList.get(index));
 		
 	};
 	public void sumUp()throws Exception{
@@ -218,7 +235,8 @@ public class CashControl extends CommodityDBControl
 		for(i=b.getStartIndex();i<j;i++)
 		{
 			discountPrice+=	  b.shoppingList.get(i).getPrice() 
-							* (1- b.shoppingList.get(i).getDiscount())
+							* (1- getDiscount(b.shoppingList.get(i).getBarcode(),b.ifSuperVIP()))
+							//* (1- b.shoppingList.get(i).getDiscount())
 							* b.priNumList.get(i);
 		}
 		System.out.println(discountPrice);
@@ -234,18 +252,6 @@ public class CashControl extends CommodityDBControl
 			//b.setDiscountPrice(discountPrice + b.presentBill.getSumPrice());
 		}
 		b.setDiscountPrice(discountPrice);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	};
 		
 	
@@ -289,7 +295,6 @@ public class CashControl extends CommodityDBControl
 				
 				break;
 			}
-			
 		}
 		if(!isAdd)
 		{
@@ -298,14 +303,11 @@ public class CashControl extends CommodityDBControl
 			b.priNumList.addElement(new Integer(num));
 			changeCommodityNum(barcode,0-num);
 			//priSumUp(tempCommodity);
-
 		}
 		
 		priSumUp(temp,isAdd,index);
 		sumUp();
-		
-		
-		
+
 		return temp.toString();
 	}
 
@@ -322,7 +324,6 @@ public class CashControl extends CommodityDBControl
 		shoppoingList.remove(index);
 		priNumList.remove(index);
 		priPriceList.remove(index);
-		
 		
 		sumUp();
 	}
@@ -373,7 +374,7 @@ public class CashControl extends CommodityDBControl
 			k=b.priNumList.get(i);
 			while(k-->0)out+="\n"+b.shoppingList.get(i).getBarcode();
 			
-			i++;
+			//i++;
 		}
 		return out+"\n";
 	}
@@ -421,17 +422,44 @@ public class CashControl extends CommodityDBControl
 		return b;
 	}
 	
-	public VIP searchVIP(String userID){
+	public VIP searchVIP(String userID) throws Exception{
 		return vipdbc.searchVip(userID);
 	}
 	
-	public boolean activeVIP(VIP vip){
+	public boolean activeVIP(VIP vip) throws Exception{
+		if(this.vip != null)
+		{
+			try{
+				closeVIP(this.vip);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		try{
+			vipdbc.activeVipStatus(vip);
+		}catch (Exception e){
+			return false;
+		}
 		this.vip=vip;
+	//	System.out.println(vip.ifVIP());
 		b.setVipInBill(vip);
-		return vipdbc.activeVipStatus(vip);
+		
+		if(b!=null)
+		{
+			int index=b.getStartIndex();
+			int j=b.shoppingList.size();
+			for(;index<j;index++)priSumUp(b.shoppingList.get(index),true,index);
+			sumUp();
+		}
+		
+		
+		return true;
+		//return vipdbc.activeVipStatus(vip);
 	}
 	
-	public boolean closeVIP(VIP vip){
+	public boolean closeVIP(VIP vip) throws Exception{
+		if(vip==null)return false;
+		if(!this.vip.equals(vip))return false;
 		this.vip=null;
 		b.setVipInBill(null);
 		return vipdbc.closeVipStatus(vip);
@@ -439,8 +467,4 @@ public class CashControl extends CommodityDBControl
 	public VIP getVIP(){
 		return vip;
 	}
-	
-	
-	
-	
 }

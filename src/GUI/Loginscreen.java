@@ -1,8 +1,11 @@
+package GUI;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -12,6 +15,7 @@ import java.io.FileOutputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,6 +24,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+
+import control.StaffDBControl;
 
 public class Loginscreen extends JFrame{
 	private static final long serialVersionUID = 1L; 
@@ -37,7 +43,7 @@ public class Loginscreen extends JFrame{
     JButton btnC=new JButton("清空");
     JButton btnE=new JButton("退出");
     
-    JRadioButton rdo=new JRadioButton("记住我");
+    JCheckBox rdo=new JCheckBox("记住我");
     
     JTextField pnlscanid=new JTextField();     
     JPasswordField password=new JPasswordField();
@@ -46,6 +52,9 @@ public class Loginscreen extends JFrame{
     int re=1;
     
     ImageIcon background; 
+    
+    StaffDBControl sdbc;
+    int userId=0;
     
 	Loginscreen(String title){
 		super("登陆界面");                                       
@@ -67,7 +76,7 @@ public class Loginscreen extends JFrame{
 	  	p2.add(password);
 	  	p3.add(rdo);
 	  	p3.add(Labe3);
-	  	int size=50;
+/*	  	int size=50;
 	  	Labe.setFont(new Font("Serif",Font.PLAIN,size));
 	  	Labe.setForeground(Color.blue);  	  		  	  
 	  	Dimension d=new Dimension(30,600);          
@@ -81,6 +90,7 @@ public class Loginscreen extends JFrame{
 	  	d=new Dimension(250,30);
 	  	password.setPreferredSize(d);
 	  	pnlscanid.setPreferredSize(d);
+	  	*/
 	  	
 	  	btnN.addMouseListener((MouseListener) new MYListenerN());    
 	  	btnC.addMouseListener((MouseListener) new MYListenerC());    
@@ -99,7 +109,57 @@ public class Loginscreen extends JFrame{
 	    	 rdo.setSelected(false);
 	    }
 	  	setVisible(true);
+	  	
+	  	try{
+	  		sdbc=new StaffDBControl();
+	  	}catch(Exception e){
+	  		e.printStackTrace();
+	  	}
 	}
+	
+	public void paint(Graphics g)
+    {
+        //窗口改变大小时，textarea1也跟着改变大小
+		super.paint(g);
+		int size1=this.getHeight()/6;
+	  	Labe.setFont(new Font("华文新魏",Font.PLAIN,size1));
+	  	Labe.setForeground(Color.blue);  	  
+	  	Labe1.setFont(new Font("Serif",Font.PLAIN,size1/4));
+	  	Labe1.setForeground(Color.black);  	
+	  	Labe2.setFont(new Font("Serif",Font.PLAIN,size1/4));
+	  	Labe2.setForeground(Color.black); 
+	  	btnN.setFont(new Font("宋体" , Font.BOLD,size1/3));
+	  	btnN.setForeground(Color.black); 
+	  	btnC.setFont(new Font("宋体" , Font.BOLD,size1/3));
+	  	btnC.setForeground(Color.black); 
+	  	btnE.setFont(new Font("宋体" , Font.BOLD,size1/3));
+	  	btnE.setForeground(Color.black); 
+	  	rdo.setFont(new Font("宋体" , Font.PLAIN,size1/3));
+	  	rdo.setForeground(Color.black); 
+	  	Labe3.setFont(new Font("宋体" , Font.PLAIN,size1/3));
+	  	Labe3.setForeground(Color.black); 
+	  	pnlscanid.setFont(new Font("宋体" , Font.PLAIN,size1/3));
+	  	pnlscanid.setForeground(Color.black); 
+	  	password.setFont(new Font("宋体" , Font.PLAIN,size1/3));
+	  	password.setForeground(Color.black); 
+	  	Dimension d=new Dimension(30,600);          
+	  	  //设置区域大小
+	//  	d=new Dimension(450,40);
+	  	d=new Dimension(this.getWidth()-10,this.getHeight()/7);
+	  	p1.setPreferredSize(d);
+	  	p2.setPreferredSize(d);
+//	  	d=new Dimension(450,40); 
+	  	p3.setPreferredSize(d);
+	  	
+//	  	d=new Dimension(250,30);
+	  	d=new Dimension(this.getWidth()*2/3,this.getHeight()/8);	  	
+	  	password.setPreferredSize(d);
+	  	pnlscanid.setPreferredSize(d);
+	  	d=new Dimension(this.getWidth()/10,this.getHeight()/7);	  	
+	  	Labe1.setSize(d);
+	  	Labe2.setSize(d);
+	  	
+    }
 	
 	class MYListenerN implements MouseListener{                                    //添加按钮监视器
     	@SuppressWarnings("deprecation")
@@ -110,23 +170,25 @@ public class Loginscreen extends JFrame{
     		else if(password.getText().equals(""))
     			JOptionPane.showMessageDialog(null, "The password Empty", "The password Empty", JOptionPane.ERROR_MESSAGE);
     		else{
-    			Connection con = new Connection(pnlscanid.getText(),password.getText(),check);
-    			check=con.newconnect(pnlscanid.getText(),password.getText());
-    		if(check==0){
-    			JOptionPane.showMessageDialog(null, "The User Name Error", "The User Name Error", JOptionPane.ERROR_MESSAGE);
-    			pnlscanid.setText("");password.setText("");
-    		}		
-    		if(check==1){
-    			JOptionPane.showMessageDialog(null, "The password Error", "The password Error", JOptionPane.ERROR_MESSAGE); 
-    			password.setText("");
-    		}
-    		if(check==2){
+    			
+    			try {
+					userId=sdbc.login(pnlscanid.getText(), password.getText());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println(userId);
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Wrong", JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
+					return;
+				}
+    		
     			if(rdo.isSelected()){re=1;}
     			else re=0;
     			save.saveFile(re);save.savename(pnlscanid.getText());save.savepassword(password.getText());
-    			 NewFrame f=new NewFrame("");
-    	         f.setLocationRelativeTo(null);   
-    		}
+    			 NewFrame f=new NewFrame(userId);
+    	         f.setLocationRelativeTo(null); 
+    	         
+    	         dispose();
+    		
 
     		}
     		

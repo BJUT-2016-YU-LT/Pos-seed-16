@@ -44,9 +44,7 @@ public class Bill{
 				}
 			
 		}
-		
 		return 0;
-		
 	}
 	
 	
@@ -58,20 +56,21 @@ public class Bill{
 		s += "***商店购物清单***\n";
 		
 		if(vip!=null){
-			s+="VipID:"+vip.getUserID()+"VipPoints:"+vip.getPoints()+"\n";
+			s+="VipID:"+vip.getUserID()+" Vip积分:"+vip.getPoints()+"\n";
 			s += "----------------------\n";
 		}
 		
 		
-		s +="printTime:";
-		s += new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())+"\n";
+//		s +="打印时间:";
+//		s += new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())+"\n";
 		s += "----------------------\n";
 		int index = startIndexOfShoppoingList;
 		int j=shoppingList.size();
 		
-		//Commodity c;
+		Commodity c;
 		//for(;index<j;index++)
-		for(Commodity c:shoppingList)
+		//for(Commodity c:shoppingList)
+		for(;index<j;index++)
 		{
 			
 			
@@ -81,17 +80,21 @@ public class Bill{
 					searchPromotionNumInBill(c.getBarcode())+
 					//presentBill.numInBill(c.getBarcode()))+
 					c.getUnit()+
-					"，单价："+Float.toString(c.getPrice())+
-					"(元)，小计："+df.format(priPriceList.get(index))+"(元)\n");
-			index++;
+					"，单价："+Float.toString(c.getPrice()));
+			if(priPriceList.get(index) >= 1)
+				s += "(元)，小计："+df.format(priPriceList.get(index))+"(元)\n";
+			else
+				s += "(元)，小计："+"0"+df.format(priPriceList.get(index))+"(元)\n";
+			//index++;
 		}
 		
 		index = 0;
+		
 		if(startIndexOfShoppoingList!=0)
 		{
 			s += "----------------------\n";
 			s += "挥泪赠送商品:\n";
-			for(Commodity c;index< startIndexOfShoppoingList;index++)
+			for(;index< startIndexOfShoppoingList;index++)
 			{
 				c=shoppingList.get(index);
 				
@@ -101,9 +104,15 @@ public class Bill{
 		}
 		
 		s += "----------------------\n";
-		s += "总计："+df.format(sumPrice)+"(元)\n";
+		if(sumPrice >= 0)
+			s += "总计："+df.format(sumPrice)+"(元)\n";
+		else
+			s += "总计："+"0"+df.format(sumPrice)+"(元)\n";
 		if(discountPrice >= 0.01)
-			s += "节省："+df.format(discountPrice)+"(元)\n";
+			if(discountPrice >= 1)
+				s += "节省："+df.format(discountPrice)+"(元)\n";
+			else
+				s += "节省："+"0"+df.format(discountPrice)+"(元)\n";
 		s += "**********************\n";
 		return s;
 	}
@@ -116,8 +125,15 @@ public class Bill{
 	public VIP getVipOfBill(){
 		return vip;
 	}
+	
+	public boolean ifSuperVIP(){
+		if(vip==null)return false;
+		
+		return vip.ifVIP();
+	}
 	public void setVipInBill(VIP v){
 		vip=v;
+	//	System.out.println(vip.ifVIP());
 	}
 	
 	
@@ -164,6 +180,4 @@ public class Bill{
 	public int getStartIndex(){
 		return startIndexOfShoppoingList;
 	}
-	
-	
 };

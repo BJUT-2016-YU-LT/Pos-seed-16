@@ -31,6 +31,8 @@ public class CommodityDBControl
             conn = DriverManager.getConnection(url, user, password);
             // statement”√¿¥÷¥––SQL”Ôæ‰
     	} catch (Exception e) {
+    		if(conn != null)
+    			conn.close();
     		throw e;
     	}
     }
@@ -78,8 +80,10 @@ public class CommodityDBControl
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			statement.close();
-			rs.close();
+			if(statement != null)
+				statement.close();
+			if(rs != null)
+				rs.close();
 		}
 		return result;
     }
@@ -121,8 +125,10 @@ public class CommodityDBControl
 			e.printStackTrace();
 			throw e;
 		} finally {
-			statement.close();
-			rs.close();
+			if(statement != null)
+				statement.close();
+			if(rs != null)
+				rs.close();
 		}
 		return result;
     }	
@@ -154,8 +160,10 @@ public class CommodityDBControl
 			e.printStackTrace();
 			throw e;
 		} finally {
-			statement.close();
-			rs.close();
+			if(statement != null)
+				statement.close();
+			if(rs != null)
+				rs.close();
 		}
 	}
 	
@@ -174,7 +182,8 @@ public class CommodityDBControl
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			statement.close();
+			if(statement != null)
+				statement.close();
 		}
     }
     
@@ -183,7 +192,7 @@ public class CommodityDBControl
     {
     	float discount = 1;
     	float VIPDiscount = 1;
-    	String sql = "SELECT discount FROM discount_commodity WHERE barcode=\'" + barcode + "\'";
+    	String sql = "SELECT * FROM discount_commodity WHERE barcode=\'" + barcode + "\'";
     	ResultSet rs = null;
     	Statement statement = null;
     	try {
@@ -198,11 +207,11 @@ public class CommodityDBControl
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			statement.close();
-			rs.close();
+			if(statement != null)
+				statement.close();
+			if(rs != null)
+				rs.close();
 		}
-    	
-    	
     	
     	return discount*VIPDiscount;
     }
@@ -224,8 +233,10 @@ public class CommodityDBControl
 			e.printStackTrace();
 			throw e;
 		} finally {
-			statement.close();
-			rs.close();
+			if(statement != null)
+				statement.close();
+			if(rs != null)
+				rs.close();
 		}
     	return promotion;
     }
@@ -247,8 +258,10 @@ public class CommodityDBControl
 			e.printStackTrace();
 			throw e;
 		} finally {
-			statement.close();
-			rs.close();
+			if(statement != null)
+				statement.close();
+			if(rs != null)
+				rs.close();
 		}
     	return num;
     }
